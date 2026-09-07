@@ -1,8 +1,9 @@
 target/
+# keep the packaged jar (CI downloads it into target/ before docker build)
+!target/*.jar
 .git/
 .idea/
 .mvn/
 *.iml
 *.log
 data/
-

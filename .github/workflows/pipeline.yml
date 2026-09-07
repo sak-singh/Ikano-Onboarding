@@ -18,8 +18,8 @@ permissions:
 env:
   JAVA_VERSION: "21"
   ARTIFACT_NAME: onboarding-jar
-  GCP_PROJECT_ID: wired-torus-426414-u8
-  GCP_REGION: europe-north1
+  GCP_PROJECT_ID: ikano-onboarding
+  GCP_REGION: europe-west4
   AR_REPOSITORY: ikano-onboarding
   IMAGE_NAME: onboarding
   CLOUD_RUN_SERVICE: ikano-onboarding
@@ -99,6 +99,7 @@ jobs:
       # Immutable tag = commit SHA (traceability); 'latest' is convenience only
       - name: Build & push image
         run: |
+          ls -l target/*.jar
           docker build \
             --label org.opencontainers.image.revision=${{ github.sha }} \
             -t "$IMAGE:${{ github.sha }}" \
