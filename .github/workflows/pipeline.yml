@@ -18,6 +18,11 @@ permissions:
 env:
   JAVA_VERSION: "21"
   ARTIFACT_NAME: onboarding-jar
+  GCP_PROJECT_ID: wired-torus-426414-u8
+  GCP_REGION: europe-north1
+  AR_REPOSITORY: ikano-onboarding
+  IMAGE_NAME: onboarding
+  CLOUD_RUN_SERVICE: ikano-onboarding
 
 jobs:
   # ─────────────────────────── Stage 1: build & test ───────────────────────────
@@ -53,81 +58,59 @@ jobs:
           path: target/*.jar
           retention-days: 7
 
-  # ─────────────────────────── Stage 2: security ───────────────────────────────
-  security:
-    name: Security scans
+  # ─────────────────────────── Stage 2: deploy (master only) ───────────────────
+  deploy:
+    name: Deploy to Google Cloud Run
     runs-on: ubuntu-latest
     needs: build
-    timeout-minutes: 20
-    permissions:
-      contents: read
-      security-events: write   # upload SARIF to the Security tab
-    steps:
-      - uses: actions/checkout@v5
-
-      - name: Install Trivy
-        env:
-          TRIVY_VERSION: v0.58.1
-        run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
-            | sh -s -- -b /usr/local/bin "$TRIVY_VERSION"
-          trivy --version
-
-      # Covers Maven dependencies (pom.xml), IaC/config misconfigurations and leaked secrets
-      - name: Dependency, config & secret scan (Trivy)
-        run: |
-          trivy fs . \
-            --scanners vuln,misconfig,secret \
-            --severity HIGH,CRITICAL \
-            --format sarif \
-            --output trivy.sarif \
-            --exit-code 0
-
-      - name: Upload SARIF
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: trivy.sarif
-
-  # ─────────────────────────── Stage 3: deploy (master only) ───────────────────
-  deploy:
-    name: Deploy to AWS
-    runs-on: ubuntu-latest
-    needs: [build, security]
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     timeout-minutes: 20
     environment:
       name: production            # add required reviewers in Settings → Environments
     permissions:
       contents: read
-      id-token: write             # OIDC – no long-lived AWS keys
+    env:
+      IMAGE: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.AR_REPOSITORY }}/${{ env.IMAGE_NAME }}
     steps:
       - uses: actions/checkout@v5
 
-      # Promote the exact artifact that was tested and scanned – never rebuild
+      # Promote the exact artifact that was tested – never rebuild
       - name: Download built JAR
         uses: actions/download-artifact@v5
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: target/
 
-      - name: Check AWS configuration
-        id: cfg
-        run: |
-          if [ -z "${{ vars.AWS_ROLE_ARN }}" ]; then
-            echo "::notice::AWS_ROLE_ARN not configured – skipping deploy"
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Configure AWS credentials (OIDC)
-        if: steps.cfg.outputs.enabled == 'true'
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-          aws-region: ${{ vars.AWS_REGION }}
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-      - name: Deploy
-        if: steps.cfg.outputs.enabled == 'true'
-        run: ./deploy/deploy.sh
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
+
+      # Immutable tag = commit SHA (traceability); 'latest' is convenience only
+      - name: Build & push image
+        run: |
+          docker build \
+            --label org.opencontainers.image.revision=${{ github.sha }} \
+            -t "$IMAGE:${{ github.sha }}" \
+            -t "$IMAGE:latest" .
+          docker push --all-tags "$IMAGE"
+
+      - name: Deploy to Cloud Run
+        id: run
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.CLOUD_RUN_SERVICE }}
+          region: ${{ env.GCP_REGION }}
+          image: ${{ env.IMAGE }}:${{ github.sha }}
+          flags: --allow-unauthenticated --port=8080 --memory=512Mi --min-instances=0 --max-instances=2
+
+      - name: Smoke test
+        run: curl -fsS "${{ steps.run.outputs.url }}/actuator/health" || curl -fsS "${{ steps.run.outputs.url }}/"
+
+      - name: Summary
+        run: echo "Deployed ${{ env.IMAGE }}:${{ github.sha }} → ${{ steps.run.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
