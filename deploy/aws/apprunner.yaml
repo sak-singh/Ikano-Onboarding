@@ -1,0 +1,15 @@
+version: 1.0
+runtime: docker
+build:
+  commands:
+    build:
+      - echo "Build handled by Dockerfile"
+run:
+  runtime-version: latest
+  command: java -jar /app/app.jar
+  network:
+    port: 8080
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: postgres
+

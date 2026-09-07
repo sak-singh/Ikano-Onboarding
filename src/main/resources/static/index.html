@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ikano | Digital Onboarding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/onboarding.css" />
+</head>
+<body>
+
+<div class="bg-decor" aria-hidden="true"></div>
+
+<header class="app-header">
+    <div class="header-inner">
+        <div class="brand">
+            <span class="brand-mark">I</span>
+            <span class="brand-name">Ikano <em>Onboarding</em></span>
+        </div>
+        <nav class="header-nav">
+            <span class="nav-pill">Private &amp; Business Banking</span>
+        </nav>
+    </div>
+</header>
+
+<main class="app-main">
+
+    <!-- Hero -->
+    <section class="hero" id="hero-section">
+        <div class="hero-copy">
+            <span class="eyebrow">Digital account opening</span>
+            <h1>Open your account in minutes,<br />wherever you bank.</h1>
+            <p class="hero-sub">
+                One adaptive journey for private and business customers across Sweden, Spain and Poland
+                &mdash; with real-time identity, registry and credit checks built in.
+            </p>
+            <div class="hero-stats">
+                <div class="stat"><strong>3</strong><span>Markets supported</span></div>
+                <div class="stat"><strong>6</strong><span>Guided journeys</span></div>
+                <div class="stat"><strong>&lt;10min</strong><span>Typical completion</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Selector card -->
+    <section class="card card-elevated" id="selector-card">
+        <div class="card-heading">
+            <h2>Let's get started</h2>
+            <p class="subtitle">Tell us your country and account type. We'll tailor every next step for you.</p>
+        </div>
+
+        <form id="selector-form" novalidate>
+            <div class="field-group">
+                <label class="field-label">01&nbsp;&middot;&nbsp;Country</label>
+                <div class="option-grid three-col" id="country-options" role="radiogroup" aria-label="Country">
+                    <button type="button" class="option-btn" data-value="SWEDEN">
+                        <span class="option-flag">🇸🇪</span>
+                        <span class="option-title">Sweden</span>
+                        <span class="option-hint">BankID-style identity check</span>
+                    </button>
+                    <button type="button" class="option-btn" data-value="SPAIN">
+                        <span class="option-flag">🇪🇸</span>
+                        <span class="option-title">Spain</span>
+                        <span class="option-hint">DNI/NIE + Clave/DNIe</span>
+                    </button>
+                    <button type="button" class="option-btn" data-value="POLAND">
+                        <span class="option-flag">🇵🇱</span>
+                        <span class="option-title">Poland</span>
+                        <span class="option-hint">PESEL + eID / mObywatel</span>
+                    </button>
+                </div>
+                <p class="field-error" id="country-error" role="alert"></p>
+            </div>
+
+            <div class="field-group">
+                <label class="field-label">02&nbsp;&middot;&nbsp;Account type</label>
+                <div class="option-grid two-col" id="type-options" role="radiogroup" aria-label="Account type">
+                    <button type="button" class="option-btn" data-value="PRIVATE">
+                        <span class="option-icon">👤</span>
+                        <span class="option-title">Private individual</span>
+                        <span class="option-hint">Personal identity &amp; income checks</span>
+                    </button>
+                    <button type="button" class="option-btn" data-value="BUSINESS">
+                        <span class="option-icon">🏢</span>
+                        <span class="option-title">Business</span>
+                        <span class="option-hint">Company registry &amp; UBO checks</span>
+                    </button>
+                </div>
+                <p class="field-error" id="type-error" role="alert"></p>
+            </div>
+
+            <button type="submit" class="primary-btn" id="continue-btn">
+                Continue
+                <span class="btn-arrow">&rarr;</span>
+            </button>
+        </form>
+    </section>
+
+    <!-- Placeholder flow screen, shown after selection. Real step engine will replace this. -->
+    <section class="card card-elevated hidden" id="flow-card">
+        <button type="button" class="back-link" id="back-btn">&larr; Change selection</button>
+
+        <div class="flow-header">
+            <span class="flow-badge" id="flow-badge"></span>
+            <h2 id="flow-title"></h2>
+        </div>
+
+        <div class="progress-track" aria-label="Progress">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <p class="progress-label" id="progress-label"></p>
+
+        <!-- Interactive per-step form renderer for PRIVATE flows -->
+        <div id="private-flow-container"></div>
+
+        <!-- Simple step-list preview for BUSINESS flows (not yet interactive) -->
+        <ol class="step-list" id="step-list"></ol>
+    </section>
+</main>
+
+<footer class="app-footer">
+    <p>Sample onboarding flow &mdash; mock data only, no real checks are performed.</p>
+</footer>
+
+<script src="js/flows.js"></script>
+<script src="js/privateFlow.js"></script>
+<script src="js/onboarding.js"></script>
+</body>
+</html>
+
+
+

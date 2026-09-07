@@ -1,0 +1,106 @@
+<mxfile host="app.diagrams.net" modified="2026-08-27T10:00:00.000Z" agent="Mozilla/5.0" version="24.7.17" type="device">
+  <diagram id="business-flow" name="Business Flow">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="n1" value="Start" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="40" y="140" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="n2" value="Select Country (SE / ES / PL)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="140" width="220" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="n3" value="Select Customer Type (Private / Business)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="460" y="140" width="260" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="n4" value="Load Flow Template" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="760" y="140" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="n5" value="Step Form + Validation" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="140" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="n6" value="Save Step State + Audit Event" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1220" y="140" width="230" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="d1" value="More Steps?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1490" y="125" width="120" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="n7" value="Run Integration Checks" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1660" y="140" width="190" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="n8" value="Decisioning Rules" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1890" y="140" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="d2" value="Outcome" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="2090" y="125" width="110" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="o1" value="APPROVED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="2240" y="40" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="o2" value="MANUAL_REVIEW" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="2240" y="130" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="o3" value="REJECTED" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="2240" y="220" width="150" height="45" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" edge="1" parent="1" source="n1" target="n2" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="n2" target="n3" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="n3" target="n4" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="n4" target="n5" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="n5" target="n6" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="n6" target="d1" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e7" value="Yes" edge="1" parent="1" source="d1" target="n5" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1080" y="250"/></Array></mxGeometry></mxCell>
+        <mxCell id="e8" value="No" edge="1" parent="1" source="d1" target="n7" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="n7" target="n8" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="n8" target="d2" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="d2" target="o1" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="d2" target="o2" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e13" edge="1" parent="1" source="d2" target="o3" style="endArrow=block;html=1;rounded=0;"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="system-architecture" name="System Architecture">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1920" pageHeight="1080" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="s1" value="Thymeleaf UI" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="200" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="s2" value="Web Controllers + DTO Validation" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="200" width="260" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="s3" value="Flow Engine" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="120" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="s4" value="Application State Service" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="120" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="s5" value="Integration Clients (Mocks)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="900" y="290" width="220" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="s6" value="Decisioning Service" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="290" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="s7" value="Audit Service" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="290" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="s8" value="DB (H2 / PostgreSQL)" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;" vertex="1" parent="1">
+          <mxGeometry x="1180" y="120" width="190" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="se1" edge="1" parent="1" source="s1" target="s2" style="endArrow=block;html=1;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="se2" edge="1" parent="1" source="s2" target="s3" style="endArrow=block;html=1;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="se3" edge="1" parent="1" source="s3" target="s4" style="endArrow=block;html=1;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="se4" edge="1" parent="1" source="s4" target="s8" style="endArrow=block;html=1;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="se5" edge="1" parent="1" source="s3" target="s5" style="endArrow=block;html=1;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="se6" edge="1" parent="1" source="s5" target="s6" style="endArrow=block;html=1;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="se7" edge="1" parent="1" source="s6" target="s4" style="endArrow=block;html=1;"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1010" y="240"/></Array></mxGeometry></mxCell>
+        <mxCell id="se8" edge="1" parent="1" source="s2" target="s7" style="endArrow=block;html=1;"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="se9" edge="1" parent="1" source="s7" target="s8" style="endArrow=block;html=1;"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="980" y="320"/></Array></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

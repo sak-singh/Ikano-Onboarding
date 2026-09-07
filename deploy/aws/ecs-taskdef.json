@@ -1,0 +1,52 @@
+{
+  "family": "ikano-onboarding-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::<account-id>:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::<account-id>:role/ecsTaskRole",
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": "REPLACED_BY_GITHUB_ACTION",
+      "essential": true,
+      "portMappings": [
+        { "containerPort": 8080, "protocol": "tcp" }
+      ],
+      "environment": [
+        { "name": "SPRING_PROFILES_ACTIVE", "value": "postgres" }
+      ],
+      "secrets": [
+        {
+          "name": "SPRING_DATASOURCE_URL",
+          "valueFrom": "arn:aws:secretsmanager:eu-north-1:<account-id>:secret:ikano/db-url"
+        },
+        {
+          "name": "SPRING_DATASOURCE_USERNAME",
+          "valueFrom": "arn:aws:secretsmanager:eu-north-1:<account-id>:secret:ikano/db-user"
+        },
+        {
+          "name": "SPRING_DATASOURCE_PASSWORD",
+          "valueFrom": "arn:aws:secretsmanager:eu-north-1:<account-id>:secret:ikano/db-pass"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/ikano-onboarding",
+          "awslogs-region": "eu-north-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ]
+}
+
