@@ -90,14 +90,32 @@ jobs:
           echo "IMAGE=${IMAGE_REF}" >> "$GITHUB_ENV"
           echo "image=${IMAGE_REF}" >> "$GITHUB_OUTPUT"
 
-      - name: Build & push image
+      - name: Build image
         run: |
           ls -l target/*.jar
           docker build \
             --label org.opencontainers.image.revision=${{ github.sha }} \
             -t "$IMAGE:${{ github.sha }}" \
             -t "$IMAGE:latest" .
-          docker push --all-tags "$IMAGE"
+
+      # Fail fast in CI instead of failing the Cloud Run health check
+      - name: Container smoke test (simulates Cloud Run PORT contract)
+        run: |
+          docker run -d --name onboarding-test -e PORT=8080 -p 8080:8080 \
+            -e SPRING_PROFILES_ACTIVE=cloud "$IMAGE:${{ github.sha }}"
+          for i in $(seq 1 40); do
+            if curl -fsS http://localhost:8080/actuator/health >/dev/null; then
+              echo "Container healthy after ${i}s"; docker rm -f onboarding-test; exit 0
+            fi
+            sleep 2
+          done
+          echo "::error::Container failed to listen on port 8080"
+          docker logs onboarding-test
+          docker rm -f onboarding-test
+          exit 1
+
+      - name: Push image
+        run: docker push --all-tags "$IMAGE"
 
       - name: Deploy to Cloud Run
         id: run
@@ -106,6 +124,8 @@ jobs:
           service: ${{ env.CLOUD_RUN_SERVICE }}
           region: ${{ env.GCP_REGION }}
           image: ${{ steps.img.outputs.image }}:${{ github.sha }}
+          env_vars: |
+            SPRING_PROFILES_ACTIVE=cloud
           flags: >-
             --allow-unauthenticated
             --port=8080
